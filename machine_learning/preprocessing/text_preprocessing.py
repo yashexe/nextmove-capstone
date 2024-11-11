@@ -13,7 +13,9 @@ lemmatizer = WordNetLemmatizer()
 
 def preprocess_text(text):
     """
-    Preprocesses input text by removing non-alphanumeric characters, converting to lowercase,
+    Preprocesses input text by: 
+    removing non-alphanumeric characters, 
+    converting to lowercase,
     tokenizing, removing stop words, and lemmatizing.
     
     Args:
