@@ -1,7 +1,7 @@
 # Retreive Access Token for Outlook
 # import os
 # from dotenv import load_dotenv
-# import msal
+# import msal 
 
 # # Azure AD App registration details
 # CLIENT_ID = os.getenv('CLIENT_ID')
