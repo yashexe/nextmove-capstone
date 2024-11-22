@@ -3,7 +3,8 @@ from dotenv import load_dotenv
 import imaplib
 import email
 from email.header import decode_header
- 
+import json
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -21,7 +22,8 @@ status, messages = mail.search(None, "ALL")
 email_ids = messages[0].split()
 latest_emails = email_ids[-5:]  # Get the last 5 email IDs
 
-# Process and print the details of each email
+# Process and store the details of each email
+emails = []
 for email_id in latest_emails:
     status, data = mail.fetch(email_id, "(RFC822)")
     msg = email.message_from_bytes(data[0][1])
@@ -34,10 +36,16 @@ for email_id in latest_emails:
     # Decode the sender
     from_ = msg.get("From")
     
-    # Print out the details
-    print(f"Subject: {subject}")
-    print(f"From: {from_}")
-    print("="*50)
+    # Store email details
+    emails.append({
+        "subject": subject,
+        "from": from_,
+        "body": msg.get_payload(decode=True).decode(errors='ignore')
+    })
+
+# Save emails to a local JSON file (or could be used with localStorage in JavaScript)
+with open('emails.json', 'w') as f:
+    json.dump(emails, f, indent=4)
 
 # Logout after fetching emails
 mail.logout()
