@@ -32,7 +32,6 @@ function loadEmails() {
     emailElement.innerHTML = `
       <strong>From:</strong> ${email.from} <br>
       <strong>Subject:</strong> ${email.subject} <br>
-      <p>${email.body}</p>
     `;
     emailList.appendChild(emailElement);  // Append email to the list
   });
