@@ -11,7 +11,6 @@ app = Flask(__name__)
 # Load environment variables from .env file
 load_dotenv()
 
-
 @app.route('/update-emails')
 def update_emails():
     # Connect to the IMAP server and fetch emails
@@ -35,31 +34,15 @@ def update_emails():
             subject = subject.decode(encoding or "utf-8")
         from_ = msg.get("From")
 
-        # Decode body (if available)
-        body = None
-        if msg.is_multipart():
-            # If multipart, iterate through parts and get the text part
-            for part in msg.walk():
-                if part.get_content_type() == "text/plain":
-                    body = part.get_payload(decode=True).decode(errors='ignore')
-                    break
-        else:
-            body = msg.get_payload(decode=True)
-            if body:
-                body = body.decode(errors='ignore')
-
-        # Handle case where there might be no body
-        body = body if body else "No content available"
-
+        # Only append subject and sender, ignoring the body
         emails.append({
             "subject": subject,
             "from": from_,
-            "body": body
         })
 
     mail.logout()  # Logout after fetching emails
 
-    return jsonify(emails)  # Return emails as JSON
+    return jsonify(emails)  # Return emails as JSON, without body content
 
 if __name__ == "__main__":
     app.run(debug=True)
