@@ -15,10 +15,6 @@ export function Card(email) {
       <div class="card-subject">
         <strong>Subject:</strong> ${subject}
       </div>
-      <div class="card-body">
-        <p>${body}</p>
-      </div>
     `;
-
     return card;
 }
