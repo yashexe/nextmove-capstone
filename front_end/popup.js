@@ -1,4 +1,4 @@
-import { Card } from './card.js'; // Import the Card component
+import { Card } from './Card.js'; // Import the Card component
 
 // Helper: Save to localStorage
 function saveData(key, value) {
