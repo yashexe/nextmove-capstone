@@ -10,29 +10,52 @@ function loadData(key) {
   return JSON.parse(localStorage.getItem(key)) || [];
 }
 
+// Initialize default folders for a user
+function initializeDefaultFolders() {
+  const folders = loadData('folders');
+  const defaultFolders = ['Gmail', 'Outlook', 'Yahoo'];
+
+  // Add default folders if they don't already exist
+  defaultFolders.forEach((folder) => {
+    if (!folders.includes(folder)) {
+      folders.push(folder);
+    }
+  });
+
+  saveData('folders', folders);
+}
+
 // Function to update emails from the backend
 function updateEmails() {
   fetch('http://127.0.0.1:5000/update-emails') // Backend URL to update emails
     .then((response) => response.json()) // Parse the JSON response
     .then((emails) => {
       saveData('emails', emails); // Save emails to localStorage
-      loadEmails(); // Load emails into the UI
+      alert('Emails updated successfully!');
     })
     .catch((error) => console.error('Error updating emails:', error));
 }
 
-// Function to load emails from localStorage and display them
-function loadEmails() {
+// Function to load emails from localStorage and display them in the Gmail folder only
+function loadEmails(folderName) {
   const emails = loadData('emails'); // Load emails from localStorage
   const emailList = document.getElementById('email-list');
   emailList.innerHTML = ''; // Clear existing emails
 
-  // Loop through each email and add to the UI using the Card component
+  // Ensure emails are displayed only if the folder is "Gmail"
   if (folderName === 'Gmail') {
+    if (emails.length === 0) {
+      emailList.innerHTML = '<p>No emails available in Gmail folder.</p>';
+      return;
+    }
+
+    // Display emails in the Gmail folder
     emails.forEach((email) => {
       const emailCard = Card(email); // Create email card
       emailList.appendChild(emailCard); // Append the card to the list
     });
+  } else {
+    emailList.innerHTML = `<p>No emails available in ${folderName}.</p>`;
   }
 }
 
@@ -64,6 +87,7 @@ function showRegistrationScreen() {
 
     if (name && email && password && dob) {
       saveData('user', { name, email, password, dob });
+      initializeDefaultFolders(); // Initialize default folders on registration
       showVerificationScreen();
     } else {
       alert('All fields are required!');
@@ -91,6 +115,7 @@ function showVerificationScreen() {
     const user = loadData('user');
 
     if (user.email === email && user.password === password) {
+      initializeDefaultFolders(); // Ensure default folders exist for every login
       showMainPage();
     } else {
       alert('Invalid credentials!');
@@ -113,7 +138,6 @@ function showMainPage() {
   `;
 
   const folderList = document.getElementById('folder-list');
-  // Use Card only for emails, not folders
   folders.forEach((folder) => {
     const folderButton = document.createElement('button');
     folderButton.className = 'secondary folder-btn';
@@ -134,7 +158,6 @@ function showMainPage() {
       showFolderScreen(e.target.dataset.folder);
     });
   });
-
 }
 
 // Show Folder Screen
@@ -149,14 +172,7 @@ function showFolderScreen(folderName) {
     </div>
   `;
 
-  const emailList = document.getElementById('email-list');
-  const emails = loadData('emails'); // Filter emails if needed based on folder logic
-  emailList.innerHTML = '';
-
-  emails.forEach((email) => {
-    const emailCard = Card(email);
-    emailList.appendChild(emailCard);
-  });
+  loadEmails(folderName); // Load emails specific to the folder
 
   document.getElementById('back-btn').addEventListener('click', showMainPage);
 }
