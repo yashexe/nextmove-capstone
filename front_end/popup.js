@@ -1,3 +1,5 @@
+import { Card } from './Card.js'; // Import the Card component
+
 // Helper: Save to localStorage
 function saveData(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
@@ -8,34 +10,53 @@ function loadData(key) {
   return JSON.parse(localStorage.getItem(key)) || [];
 }
 
-// Function to update emails from the backend
-function updateEmails() {
-  fetch('http://127.0.0.1:5000/update-emails')  // Backend URL to update emails
-    .then(response => response.json())  // Parse the JSON response
-    .then(emails => {
-      saveData('emails', emails);  // Save emails to localStorage
-      loadEmails();  // Load emails into the UI
-    })
-    .catch(error => console.error('Error updating emails:', error));
+// Initialize default folders for a user
+function initializeDefaultFolders() {
+  const folders = loadData('folders');
+  const defaultFolders = ['Gmail', 'Outlook', 'Yahoo'];
+
+  // Add default folders if they don't already exist
+  defaultFolders.forEach((folder) => {
+    if (!folders.includes(folder)) {
+      folders.push(folder);
+    }
+  });
+
+  saveData('folders', folders);
 }
 
-// Function to load emails from localStorage and display them
-function loadEmails() {
-  const emails = loadData('emails');  // Load emails from localStorage
-  const emailList = document.getElementById('email-list');
-  emailList.innerHTML = '';  // Clear existing emails
+// Function to update emails from the backend
+function updateEmails() {
+  fetch('http://127.0.0.1:5000/update-emails') // Backend URL to update emails
+    .then((response) => response.json()) // Parse the JSON response
+    .then((emails) => {
+      saveData('emails', emails); // Save emails to localStorage
+      alert('Emails updated successfully!');
+    })
+    .catch((error) => console.error('Error updating emails:', error));
+}
 
-  // Loop through each email and add to the UI
-  emails.forEach(email => {
-    const emailElement = document.createElement('div');
-    emailElement.className = 'email-item';
-    emailElement.innerHTML = `
-      <strong>From:</strong> ${email.from} <br>
-      <strong>Subject:</strong> ${email.subject} <br>
-      <p>${email.body}</p>
-    `;
-    emailList.appendChild(emailElement);  // Append email to the list
-  });
+// Function to load emails from localStorage and display them in the Gmail folder only
+function loadEmails(folderName) {
+  const emails = loadData('emails'); // Load emails from localStorage
+  const emailList = document.getElementById('email-list');
+  emailList.innerHTML = ''; // Clear existing emails
+
+  // Ensure emails are displayed only if the folder is "Gmail"
+  if (folderName === 'Gmail') {
+    if (emails.length === 0) {
+      emailList.innerHTML = '<p>No emails available in Gmail folder.</p>';
+      return;
+    }
+
+    // Display emails in the Gmail folder
+    emails.forEach((email) => {
+      const emailCard = Card(email); // Create email card
+      emailList.appendChild(emailCard); // Append the card to the list
+    });
+  } else {
+    emailList.innerHTML = `<p>No emails available in ${folderName}.</p>`;
+  }
 }
 
 // Show Registration Screen
@@ -66,6 +87,7 @@ function showRegistrationScreen() {
 
     if (name && email && password && dob) {
       saveData('user', { name, email, password, dob });
+      initializeDefaultFolders(); // Initialize default folders on registration
       showVerificationScreen();
     } else {
       alert('All fields are required!');
@@ -93,6 +115,7 @@ function showVerificationScreen() {
     const user = loadData('user');
 
     if (user.email === email && user.password === password) {
+      initializeDefaultFolders(); // Ensure default folders exist for every login
       showMainPage();
     } else {
       alert('Invalid credentials!');
@@ -109,20 +132,19 @@ function showMainPage() {
       <h1>My Folders</h1>
       <button id="create-folder-btn">Create New Folder</button>
       <button id="update-emails-btn">Update Emails</button>
-      <div id="folder-list">
-        ${folders
-          .map(
-            (folder) =>
-              `<button class="secondary folder-btn" data-folder="${folder}">${folder}</button>`
-          )
-          .join('')}
-      </div>
+      <div id="folder-list"></div>
       <div id="email-list"></div>
     </div>
   `;
 
-  // Load and display emails if any
-  loadEmails();
+  const folderList = document.getElementById('folder-list');
+  folders.forEach((folder) => {
+    const folderButton = document.createElement('button');
+    folderButton.className = 'secondary folder-btn';
+    folderButton.dataset.folder = folder;
+    folderButton.textContent = folder;
+    folderList.appendChild(folderButton);
+  });
 
   // Event listener to create new folder
   document.getElementById('create-folder-btn').addEventListener('click', showCreateFolderScreen);
@@ -145,9 +167,12 @@ function showFolderScreen(folderName) {
     <div class="container">
       <h1>${folderName}</h1>
       <p>Emails in ${folderName}</p>
+      <div id="email-list"></div>
       <button class="secondary" id="back-btn">Back</button>
     </div>
   `;
+
+  loadEmails(folderName); // Load emails specific to the folder
 
   document.getElementById('back-btn').addEventListener('click', showMainPage);
 }
@@ -180,4 +205,4 @@ function showCreateFolderScreen() {
 }
 
 // Initialize
-showRegistrationScreen();
+document.addEventListener('DOMContentLoaded', showRegistrationScreen);

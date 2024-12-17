@@ -1,37 +1,77 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-    background-color: #eef2f7;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
-  button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    margin: 10px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  button:hover {
-    background-color: #45a049;
-  }
-  
-  .hidden {
-    display: none;
-  }
-  
-  .container {
-    padding: 20px;
-  }
-  
-  #content {
-    margin-top: 10px;
-  }
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  background-color: #eef2f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.hidden {
+  display: none;
+}
+
+.container {
+  padding: 20px;
+}
+
+#content {
+  margin-top: 10px;
+}
+
+.email-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 12px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.card-header {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.card-subject {
+  font-style: italic;
+  margin-bottom: 12px;
+  color: #555;
+}
+
+.card-body {
+  font-size: 14px;
+  color: #666;
+}
+
+button.secondary {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button.secondary:hover {
+  background-color: #0056b3;
+}
