@@ -1,19 +1,19 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
 import pickle
 from utils import load_config, validate_data
 
 
-def train_logistic_regression(
-    train_data_path, logistic_max_iter, model_path, vectorizer_path
+def train_svm(
+    train_data_path, svm_kernel, svm_c, model_path, vectorizer_path
 ):
     """
-    Train a Logistic Regression model using a pre-trained TF-IDF vectorizer.
+    Train an SVM model using a pre-trained TF-IDF vectorizer.
 
     Args:
         train_data_path (str): Path to the training dataset.
-        logistic_max_iter (int): Maximum iterations for Logistic Regression.
+        svm_kernel (str): Kernel type for the SVM (e.g., 'linear', 'rbf').
+        svm_c (float): Regularization parameter for SVM.
         model_path (str): Path to save the trained model.
         vectorizer_path (str): Path to load the pre-trained TF-IDF vectorizer.
     """
@@ -35,9 +35,9 @@ def train_logistic_regression(
     print("Transforming training data using the pre-trained vectorizer...")
     X_train_tfidf = tfidf.transform(X_train)
 
-    # --- Train Logistic Regression Model ---
-    print(f"Training Logistic Regression model: max_iter={logistic_max_iter}")
-    model = LogisticRegression(max_iter=logistic_max_iter)
+    # --- Train SVM Model ---
+    print(f"Training SVM model: kernel={svm_kernel}, C={svm_c}")
+    model = SVC(kernel=svm_kernel, C=svm_c, probability=True)
     model.fit(X_train_tfidf, y_train)
 
     # --- Save Model ---
@@ -45,7 +45,7 @@ def train_logistic_regression(
     with open(model_path, "wb") as f:
         pickle.dump(model, f)
 
-    print("Logistic Regression model training completed and saved successfully.")
+    print("SVM model training completed and saved successfully.")
 
 
 if __name__ == "__main__":
@@ -54,16 +54,18 @@ if __name__ == "__main__":
 
     # Parse parameters from the config file
     train_data_path = config["paths"]["data"]["train_set"]  # Training dataset path
-    logistic_max_iter = config["training"]["logistic_regression_max_iter"]
-    model_path = config["paths"]["models"]["logistic_regression"]
+    svm_kernel = config["training"]["svm_kernel"]
+    svm_c = config["training"]["svm_c"]
+    model_path = config["paths"]["models"]["svm"]
     vectorizer_path = config["paths"]["models"]["tfidf_vectorizer"]
 
     # Call the function with parsed parameters
-    print("Starting Logistic Regression training...")
-    train_logistic_regression(
+    print("Starting SVM training...")
+    train_svm(
         train_data_path,
-        logistic_max_iter,
+        svm_kernel,
+        svm_c,
         model_path,
         vectorizer_path
     )
-    print("Logistic Regression training completed successfully.")
+    print("SVM training completed successfully.")

@@ -1,17 +1,19 @@
-# --- Data Paths ---
-data:
-  raw_emails: "machine_learning/data/raw/raw_emails.csv"
-  labeled_emails: "machine_learning/data/labeled_emails.csv"
-  processed_emails: "machine_learning/data/processed/processed_emails.csv"
+# --- Paths ---
+paths:
+  data:
+    dataset: "machine_learning/data/raw/dataset.json"        # Path to the entire raw dataset
+    train_set: "machine_learning/data/processed/train.csv"       # Path to save the training dataset
+    test_set: "machine_learning/data/processed/test.csv"         # Path to save the test dataset
 
-# --- Model Paths ---
-model:
-  logistic_regression: "machine_learning/models/logistic_regression.pkl"
-  naive_bayes: "machine_learning/models/naive_bayes.pkl"
-  tfidf_vectorizer: "machine_learning/models/tfidf_vectorizer.pkl"
+  models:
+    logistic_regression: "machine_learning/models/logistic_regression.pkl"
+    naive_bayes: "machine_learning/models/naive_bayes.pkl"
+    svm: "machine_learning/models/svm.pkl"
+    tfidf_vectorizer: "machine_learning/models/tfidf_vectorizer.pkl"
 
-results:
-  model_results: "machine_learning/results/model_results.csv"
+  results:
+    model_results: "machine_learning/results/model_results.csv"
+
 
 # --- Training Parameters ---
 training:
@@ -21,6 +23,8 @@ training:
   tfidf_ngram_range: [1, 2]
   logistic_regression_max_iter: 1000
   naive_bayes_alpha: 0.5
+  svm_kernel: "linear"  # Options: 'linear', 'rbf', 'poly', etc.
+  svm_c: 1.0            # Regularization parameter
 
 
 # --- API Parameters (when applicable later) ---
