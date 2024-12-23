@@ -1,35 +1,55 @@
 # --- Paths ---
 paths:
   data:
-    dataset: "machine_learning/data/raw/dataset.json"        # Path to the entire raw dataset
-    train_set: "machine_learning/data/processed/train.csv"       # Path to save the training dataset
-    test_set: "machine_learning/data/processed/test.csv"         # Path to save the test dataset
+    dataset: "machine_learning/data/raw/dataset.json"            # Raw dataset file
+    train_set: "machine_learning/data/processed/train.csv"       # Processed training dataset
+    test_set: "machine_learning/data/processed/test.csv"         # Processed test dataset
 
   models:
-    logistic_regression: "machine_learning/models/logistic_regression.pkl"
-    naive_bayes: "machine_learning/models/naive_bayes.pkl"
-    svm: "machine_learning/models/svm.pkl"
-    tfidf_vectorizer: "machine_learning/models/tfidf_vectorizer.pkl"
+    tfidf_vectorizer: "machine_learning/models/tfidf_vectorizer.pkl"  # Path for saving TF-IDF vectorizer
+    logistic_regression: "machine_learning/models/logistic_regression.pkl"  # Logistic Regression model
+    naive_bayes: "machine_learning/models/naive_bayes.pkl"          # Naive Bayes model
+    svm: "machine_learning/models/svm.pkl"                          # SVM model
+    distilbert:
+      checkpoints: "machine_learning/models/distilbert/checkpoints"  # DistilBERT checkpoints
+      tokenizer: "machine_learning/models/distilbert/tokenizer"      # Tokenizer files
+
 
   results:
-    model_results: "machine_learning/results/model_results.csv"
+    dir: "machine_learning/results"
+    model_results: "machine_learning/results/evaluation/model_results.csv"     # File to save evaluation results
 
 
-# --- Training Parameters ---
 # --- Training Parameters ---
 training:
-  test_size: 0.2                      # Proportion of the dataset to include in the test split (20%)
-  random_state: 42                    # Random seed for reproducibility of train-test splits
-  tfidf_max_features: 5000            # Maximum number of features (unique words or n-grams) to retain in TF-IDF
-  tfidf_ngram_range: [1, 2]           # N-gram range for TF-IDF: [1, 2] includes unigrams and bigrams
-  logistic_regression_max_iter: 1000  # Maximum number of iterations for Logistic Regression's solver to converge
-  naive_bayes_alpha: 0.5              # Additive (Laplace/Lidstone) smoothing parameter for Naive Bayes
-  svm_kernel: "linear"                # Kernel type for SVM: 'linear', 'rbf', 'poly', etc., determine decision boundaries
-  svm_c: 1.0                          # Regularization parameter for SVM: smaller values for stronger regularization
+  # General Training
+  num_of_classes: 4                    # Number of categories/classes for classification
+  test_size: 0.2                       # Proportion of dataset allocated to the test split (20%)
+  random_state: 42                     # Random seed for reproducible data splits
+  num_epochs: 5                        # Total number of training epochs
+  
+  # TF-IDF Parameters
+  tfidf_max_features: 5000             # Maximum number of unique words or n-grams in TF-IDF
+  tfidf_ngram_range: [1, 2]            # N-gram range for TF-IDF: includes unigrams and bigrams
+  
+  # Logistic Regression
+  logistic_regression_max_iter: 1000   # Maximum iterations for convergence
+
+  # Naive Bayes
+  naive_bayes_alpha: 0.5               # Smoothing parameter (Laplace/Lidstone) for Naive Bayes
+
+  # Support Vector Machine (SVM)
+  svm_kernel: "linear"                 # SVM kernel type ('linear', 'rbf', 'poly', etc.)
+  svm_c: 1.0                           # Regularization strength (smaller values = stronger regularization)
+  
+  # DistilBERT Parameters
+  batch_size: 32                       # Batch size for training and evaluation
+  warmup_steps: 500                    # Number of warmup steps for learning rate scheduler
+  weight_decay: 0.01                   # Weight decay for optimizer
+  logging_steps: 10                    # Log metrics every N steps
 
 
-
-# --- API Parameters (when applicable later) ---
+# --- API Parameters (future implementation placeholder) ---
 # api:
-#   host: "127.0.0.1"
-#   port: 5000
+#   host: "127.0.0.1"                   # API host address
+#   port: 5000                          # API port
