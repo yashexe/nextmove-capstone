@@ -11,8 +11,8 @@ paths:
     naive_bayes: "machine_learning/models/naive_bayes.pkl"          # Naive Bayes model
     svm: "machine_learning/models/svm.pkl"                          # SVM model
     distilbert:
-      checkpoints: "machine_learning/models/distilbert/checkpoints"  # DistilBERT checkpoints
-      tokenizer: "machine_learning/models/distilbert/tokenizer"      # Tokenizer files
+      checkpoints: "machine_learning/models/distilbert/checkpoints/checkpoint-300"  # Best model path for DistilBERT checkpoints
+      tokenizer: "machine_learning/models/distilbert/tokenizer"                     # Tokenizer files
 
 
   results:
