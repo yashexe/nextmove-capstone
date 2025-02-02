@@ -1,0 +1,35 @@
+# --- Paths ---
+paths:
+  data:
+    dataset: "machine_learning/data/raw/dataset.json"        # Path to the entire raw dataset
+    train_set: "machine_learning/data/processed/train.csv"       # Path to save the training dataset
+    test_set: "machine_learning/data/processed/test.csv"         # Path to save the test dataset
+
+  models:
+    logistic_regression: "machine_learning/models/logistic_regression.pkl"
+    naive_bayes: "machine_learning/models/naive_bayes.pkl"
+    svm: "machine_learning/models/svm.pkl"
+    tfidf_vectorizer: "machine_learning/models/tfidf_vectorizer.pkl"
+
+  results:
+    model_results: "machine_learning/results/model_results.csv"
+
+
+# --- Training Parameters ---
+# --- Training Parameters ---
+training:
+  test_size: 0.2                      # Proportion of the dataset to include in the test split (20%)
+  random_state: 42                    # Random seed for reproducibility of train-test splits
+  tfidf_max_features: 5000            # Maximum number of features (unique words or n-grams) to retain in TF-IDF
+  tfidf_ngram_range: [1, 2]           # N-gram range for TF-IDF: [1, 2] includes unigrams and bigrams
+  logistic_regression_max_iter: 1000  # Maximum number of iterations for Logistic Regression's solver to converge
+  naive_bayes_alpha: 0.5              # Additive (Laplace/Lidstone) smoothing parameter for Naive Bayes
+  svm_kernel: "linear"                # Kernel type for SVM: 'linear', 'rbf', 'poly', etc., determine decision boundaries
+  svm_c: 1.0                          # Regularization parameter for SVM: smaller values for stronger regularization
+
+
+
+# --- API Parameters (when applicable later) ---
+# api:
+#   host: "127.0.0.1"
+#   port: 5000
