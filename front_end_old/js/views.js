@@ -73,7 +73,6 @@ export function showVerificationScreen() {
     }
   });
 
-  // New: Navigate to registration screen
   document.getElementById('register-btn').addEventListener('click', showRegistrationScreen);
 }
 
