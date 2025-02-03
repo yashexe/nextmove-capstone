@@ -77,7 +77,6 @@ export function showVerificationScreen() {
   document.getElementById('register-btn').addEventListener('click', showRegistrationScreen);
 }
 
-
 export function showMainPage() {
   const folders = loadData(STORAGE_KEYS.FOLDERS);
   render(`
