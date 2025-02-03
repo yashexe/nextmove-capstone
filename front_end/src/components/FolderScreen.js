@@ -1,4 +1,3 @@
-// src/components/FolderScreen.js
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import { loadData, STORAGE_KEYS } from '../utils/storage';
@@ -10,8 +9,6 @@ function FolderScreen({ folder, onBack, onLogout }) {
 
   // Load emails for the folder when this screen mounts.
   useEffect(() => {
-    // In your original code, only Gmail displayed emails.
-    // You can adjust this logic as needed.
     if (folder === 'Gmail') {
       const folderEmails = loadData(STORAGE_KEYS.EMAILS, []);
       setEmails(folderEmails);

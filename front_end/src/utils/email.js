@@ -1,4 +1,3 @@
-// src/utils/email.js
 import { saveData, loadData, STORAGE_KEYS } from './storage';
 
 export async function updateEmails() {
