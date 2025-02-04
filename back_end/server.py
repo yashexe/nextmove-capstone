@@ -1,15 +1,36 @@
+# server.py
 from flask import Flask, jsonify
 import imaplib
 import email
 from email.header import decode_header
 import os
 from dotenv import load_dotenv
+from utils import preprocess_text
+import pickle
 
 # Initialize Flask app
 app = Flask(__name__)
 
 # Load environment variables from .env file
 load_dotenv()
+
+
+# Calculate paths relative to the current file
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ML_MODELS_DIR = os.path.join(BASE_DIR, '..', 'machine_learning', 'models')
+
+# Paths to the model and vectorizer files
+vectorizer_path = os.path.join(ML_MODELS_DIR, 'tfidf_vectorizer.pkl')
+model_path = os.path.join(ML_MODELS_DIR, 'naive_bayes.pkl')
+
+# Load the TF-IDF vectorizer
+with open(vectorizer_path, 'rb') as f:
+    vectorizer = pickle.load(f)
+
+# Load the Naive Bayes model
+with open(model_path, 'rb') as f:
+    ml_model = pickle.load(f)
+
 
 @app.route('/update-emails')
 def update_emails():
@@ -34,15 +55,28 @@ def update_emails():
             subject = subject.decode(encoding or "utf-8")
         from_ = msg.get("From")
 
-        # Only append subject and sender, ignoring the body
+        # Use ML model to classify the email based on its subject.
+        # (For now we’re only classifying using the subject.)
+        category = classify_email(subject)
+
         emails.append({
             "subject": subject,
             "from": from_,
+            "category": category
         })
 
     mail.logout()  # Logout after fetching emails
 
-    return jsonify(emails)  # Return emails as JSON, without body content
+    return jsonify(emails)  # Return emails as JSON, now including the predicted category.
+
+def classify_email(text):
+    # Preprocess the input text to mimic training data's 'processed_content'
+    preprocessed_text = preprocess_text(text)
+    # Transform the preprocessed text using the loaded TF-IDF vectorizer
+    features = vectorizer.transform([preprocessed_text])
+    # Predict the category using the loaded Naive Bayes model
+    prediction = ml_model.predict(features)
+    return prediction[0]
 
 if __name__ == "__main__":
     app.run(debug=True)
