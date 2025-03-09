@@ -1,4 +1,3 @@
-// src/utils/storage.js
 export const STORAGE_KEYS = {
     FOLDERS: 'folders',
     EMAILS: 'emails',

@@ -1,5 +1,4 @@
-// src/components/Navbar.js
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 function Navbar({ onLogout }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,7 +10,6 @@ function Navbar({ onLogout }) {
     document.body.classList.toggle('dark-mode');
   };
 
-  // Optionally update the dark mode button text
   const darkModeText = darkMode ? 'Light Mode' : 'Dark Mode';
 
   return (

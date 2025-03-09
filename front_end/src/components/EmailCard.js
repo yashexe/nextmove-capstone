@@ -1,4 +1,3 @@
-// src/components/EmailCard.js
 import React from 'react';
 
 function EmailCard({ email }) {
