@@ -1,4 +1,3 @@
-// src/components/LoginScreen.js
 import React, { useState } from 'react';
 import { loadData, STORAGE_KEYS } from '../utils/storage';
 
@@ -9,8 +8,6 @@ function LoginScreen({ onLoginSuccess, onRegisterClick }) {
   const handleLogin = () => {
     const user = loadData(STORAGE_KEYS.USER, {});
     if (user.email === email && user.password === password) {
-      // Initialize default folders if necessary (call a utility function here)
-      // e.g., initializeDefaultFolders();
       onLoginSuccess();
     } else {
       alert('Invalid credentials!');

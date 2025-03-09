@@ -1,4 +1,3 @@
-// src/components/MainPage.js
 import React, { useEffect, useState } from 'react';
 import Navbar from './NavBar';
 

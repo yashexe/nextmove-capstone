@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState } from 'react';
 import LoginScreen from './components/LoginScreen';
 import RegistrationScreen from './components/RegistrationScreen';
@@ -7,9 +6,7 @@ import FolderScreen from './components/FolderScreen';
 import './styles/styles.css';
 
 function App() {
-  // screen can be 'login', 'register', or 'main'
   const [screen, setScreen] = useState('login');
-  // When a folder is selected, we store its name here.
   const [currentFolder, setCurrentFolder] = useState(null);
 
   const handleLoginSuccess = () => setScreen('main');
