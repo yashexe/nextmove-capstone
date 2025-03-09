@@ -1,31 +1,34 @@
 // src/components/MainPage.js
 import React, { useEffect, useState } from 'react';
-import Navbar from './Navbar';
-import { loadData, STORAGE_KEYS, saveData } from '../utils/storage';
+import Navbar from './NavBar';
 
 function MainPage({ onLogout, onFolderSelect }) {
   const [folders, setFolders] = useState([]);
 
   useEffect(() => {
-    const loadedFolders = loadData(STORAGE_KEYS.FOLDERS, []);
-    setFolders(loadedFolders);
+    async function fetchCategories() {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/update-emails');
+        const categorizedEmails = await response.json();
+        setFolders(Object.keys(categorizedEmails));
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    }
+    fetchCategories();
   }, []);
 
-  const handleCreateFolder = () => {
-    const folderName = prompt('Enter new folder name');
-    if (folderName) {
-      const updatedFolders = [...folders, folderName];
-      saveData(STORAGE_KEYS.FOLDERS, updatedFolders);
-      setFolders(updatedFolders);
-    }
+  const handleSortEmails = async () => {
+    await fetch('http://127.0.0.1:5000/update-emails');
+    alert("Emails sorted successfully!");
   };
 
   return (
     <>
       <Navbar onLogout={onLogout} />
       <div className="container">
-        <h1>My Folders</h1>
-        <button onClick={handleCreateFolder}>Create New Folder</button>
+        <h1>Email Categories</h1>
+        <button onClick={handleSortEmails}>Sort Emails</button>
         <div id="folder-list">
           {folders.map((folder, index) => (
             <button
