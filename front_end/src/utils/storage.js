@@ -1,7 +1,7 @@
 export const STORAGE_KEYS = {
     FOLDERS: 'folders',
     EMAILS: 'emails',
-    USER: 'user',
+    USER: 'user'
   };
   
   export function saveData(key, value) {
@@ -15,8 +15,8 @@ export const STORAGE_KEYS = {
   
   export function initializeDefaultFolders() {
     const defaultFolders = ['Gmail', 'Outlook', 'Yahoo'];
-    let folders = loadData(STORAGE_KEYS.FOLDERS);
-    defaultFolders.forEach((folder) => {
+    let folders = loadData(STORAGE_KEYS.FOLDERS, []);
+    defaultFolders.forEach(folder => {
       if (!folders.includes(folder)) {
         folders.push(folder);
       }
