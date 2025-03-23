@@ -1,25 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Navbar from './NavBar';
 
-function MainPage({ onLogout, onFolderSelect }) {
-  const [folders, setFolders] = useState([]);
+const defaultFolders = ['Personal', 'Promotional', 'Urgent', 'Work']; // Replace with your preferred default folders
 
-  useEffect(() => {
-    async function fetchCategories() {
-      try {
-        const response = await fetch('http://127.0.0.1:5000/update-emails');
-        const categorizedEmails = await response.json();
-        setFolders(Object.keys(categorizedEmails));
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    }
-    fetchCategories();
-  }, []);
+function MainPage({ onLogout, onFolderSelect }) {
+  const [folders, setFolders] = useState(defaultFolders);
 
   const handleSortEmails = async () => {
-    await fetch('http://127.0.0.1:5000/update-emails');
-    alert("Emails sorted successfully!");
+    try {
+      const response = await fetch('http://127.0.0.1:5000/update-emails');
+      const categorizedEmails = await response.json();
+      setFolders(Object.keys(categorizedEmails));
+      alert("Emails sorted successfully!");
+    } catch (error) {
+      console.error("Error sorting emails:", error);
+    }
   };
 
   return (
