@@ -23,7 +23,6 @@ function FolderScreen({ folder, onBack, onLogout }) {
       <Navbar onLogout={onLogout} />
       <div className="container">
         <h1>{folder}</h1>
-        {/* Removed sort button from FolderScreen */}
         <div id="email-list">
           {emails.length > 0 ? (
             emails.map((email, index) => (
