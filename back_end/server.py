@@ -1,5 +1,6 @@
 # server.py
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 import imaplib
 import email
 from email.header import decode_header
@@ -7,9 +8,16 @@ import os
 import pickle
 from dotenv import load_dotenv
 import pickle
+from config import EMAIL
+from bs4 import BeautifulSoup
 
 # Initialize Flask app
 app = Flask(__name__)
+CORS(app)
+
+# Create a set of registerd userss
+registered_users = set()
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -76,14 +84,55 @@ def update_emails():
         category = categorize_email(subject)
         if category not in categorized_emails:
             categorized_emails[category] = []
+        
+        body = "Unable to Read Body"
+        
+        if msg.is_multipart():
+            for part in msg.walk():
+                content_type = part.get_content_type()
+                content_disposition = str(part.get("Content-Disposition"))
+
+                if content_type == "text/plain" and "attachment" not in content_disposition:
+                    body = part.get_payload(decode=True).decode(errors="ignore")
+                    break
+                elif content_type == "text/html" and not body:
+                    html = part.get_payload(decode=True).decode(errors="ignore")
+                    body = BeautifulSoup(html, "html.parser").get_text()
+        else:
+            content_type = msg.get_content_type()
+            if content_type == "text/plain":
+                body = msg.get_payload(decode=True).decode(errors="ignore")
+            elif content_type == "text/html":
+                html = msg.get_payload(decode=True).decode(errors="ignore")
+                body = BeautifulSoup(html, "html.parser").get_text()
+
         categorized_emails[category].append({
             "subject": subject,
             "from": from_,
-            "category": category
+            "category": category,
+            "body": body
         })
 
     mail.logout()  # Logout after fetching emails
     return jsonify(categorized_emails)  # Return categorized emails
+
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    email = data.get('email')
+
+    if not email:
+        return jsonify({'error': 'Email is required'}), 400
+
+    if email != EMAIL:
+        return jsonify({'error': 'Email does not match the allowed admin email'}), 403
+
+    if email in registered_users:
+        return jsonify({'error': 'Email already registered'}), 409
+
+    registered_users.add(email)
+    return jsonify({'message': 'Registration successful'}), 200
+
 
 if __name__ == "__main__":
     app.run(debug=True)
