@@ -11,6 +11,7 @@ function FolderScreen({ folder, onBack, onLogout }) {
         const response = await fetch('http://127.0.0.1:5000/update-emails');
         const categorizedEmails = await response.json();
         setEmails(categorizedEmails[folder] || []);
+        console.log("Fetched Emails:", categorizedEmails[folder]);
       } catch (error) {
         console.error('Error fetching emails:', error);
       }
@@ -26,7 +27,13 @@ function FolderScreen({ folder, onBack, onLogout }) {
         <div id="email-list">
           {emails.length > 0 ? (
             emails.map((email, index) => (
-              <EmailCard key={index} email={email} />
+              <EmailCard
+                key={index}
+                email={email}
+                subject={email.subject}
+                from={email.from}
+                category={email.category}
+                body={email.body} />
             ))
           ) : (
             <p>No emails available in {folder}.</p>

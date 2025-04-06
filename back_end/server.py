@@ -9,6 +9,7 @@ import pickle
 from dotenv import load_dotenv
 import pickle
 from config import EMAIL
+from bs4 import BeautifulSoup
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -83,10 +84,33 @@ def update_emails():
         category = categorize_email(subject)
         if category not in categorized_emails:
             categorized_emails[category] = []
+        
+        body = "Unable to Read Body"
+        
+        if msg.is_multipart():
+            for part in msg.walk():
+                content_type = part.get_content_type()
+                content_disposition = str(part.get("Content-Disposition"))
+
+                if content_type == "text/plain" and "attachment" not in content_disposition:
+                    body = part.get_payload(decode=True).decode(errors="ignore")
+                    break
+                elif content_type == "text/html" and not body:
+                    html = part.get_payload(decode=True).decode(errors="ignore")
+                    body = BeautifulSoup(html, "html.parser").get_text()
+        else:
+            content_type = msg.get_content_type()
+            if content_type == "text/plain":
+                body = msg.get_payload(decode=True).decode(errors="ignore")
+            elif content_type == "text/html":
+                html = msg.get_payload(decode=True).decode(errors="ignore")
+                body = BeautifulSoup(html, "html.parser").get_text()
+
         categorized_emails[category].append({
             "subject": subject,
             "from": from_,
-            "category": category
+            "category": category,
+            "body": body
         })
 
     mail.logout()  # Logout after fetching emails
