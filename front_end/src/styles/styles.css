@@ -191,6 +191,11 @@ button.secondary:hover {
 .dark-mode .container {
   background-color: #1e1e1e;
   box-shadow: 0 8px 20px rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.dark-mode .title {
+  color: #fff;
 }
 
 .dark-mode input[type="text"],

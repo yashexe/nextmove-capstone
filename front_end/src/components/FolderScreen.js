@@ -22,7 +22,7 @@ function FolderScreen({ folder, onBack, onLogout }) {
     <>
       <Navbar onLogout={onLogout} />
       <div className="container">
-        <h1>{folder}</h1>
+        <h1 className='title'>{folder}</h1>
         <div id="email-list">
           {emails.length > 0 ? (
             emails.map((email, index) => (

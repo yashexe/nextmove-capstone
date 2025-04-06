@@ -21,7 +21,7 @@ function MainPage({ onLogout, onFolderSelect }) {
     <>
       <Navbar onLogout={onLogout} />
       <div className="container">
-        <h1>Email Categories</h1>
+        <h1 className='title'>Email Categories</h1>
         <button onClick={handleSortEmails}>Sort Emails</button>
         <div id="folder-list">
           {folders.map((folder, index) => (
