@@ -6,15 +6,38 @@ function RegistrationScreen({ onRegistrationSuccess, onBackToLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (name && email && password) {
-      saveData(STORAGE_KEYS.USER, { name, email, password });
-      initializeDefaultFolders();
-      onRegistrationSuccess(); // Redirect to login after registration
+      try {
+        const response = await fetch("http://localhost:5000/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        });
+  
+        const result = await response.json();
+  
+        if (!response.ok) {
+          alert(result.error);  // shows "Email already registered", or "Email does not match..."
+          return;
+        }
+  
+        // If registration is successful
+        saveData(STORAGE_KEYS.USER, { name, email, password });
+        initializeDefaultFolders();
+        alert("Registration successful!");
+        onRegistrationSuccess();
+  
+      } catch (error) {
+        console.error("Registration failed:", error);
+        alert("An error occurred. Please try again.");
+      }
     } else {
-      alert('All fields are required!');
+      alert("All fields are required!");
     }
-  };
+  };  
 
   return (
     <div className="container">

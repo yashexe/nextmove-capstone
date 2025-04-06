@@ -1,5 +1,6 @@
 # server.py
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 import imaplib
 import email
 from email.header import decode_header
@@ -7,9 +8,15 @@ import os
 import pickle
 from dotenv import load_dotenv
 import pickle
+from config import EMAIL
 
 # Initialize Flask app
 app = Flask(__name__)
+CORS(app)
+
+# Create a set of registerd userss
+registered_users = set()
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -84,6 +91,24 @@ def update_emails():
 
     mail.logout()  # Logout after fetching emails
     return jsonify(categorized_emails)  # Return categorized emails
+
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    email = data.get('email')
+
+    if not email:
+        return jsonify({'error': 'Email is required'}), 400
+
+    if email != EMAIL:
+        return jsonify({'error': 'Email does not match the allowed admin email'}), 403
+
+    if email in registered_users:
+        return jsonify({'error': 'Email already registered'}), 409
+
+    registered_users.add(email)
+    return jsonify({'message': 'Registration successful'}), 200
+
 
 if __name__ == "__main__":
     app.run(debug=True)
