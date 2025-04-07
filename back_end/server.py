@@ -10,16 +10,39 @@ from config import EMAIL
 from bs4 import BeautifulSoup
 import bleach
 import re
+import base64
+import json
+
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))  # ✅ Moved here before usage
 
 app = Flask(__name__)
 CORS(app)
 
+USER_CREDENTIALS_FILE = os.path.join(CURRENT_DIR, "credentials.json")
+
+def save_encoded_password(email, app_password):
+    encoded = base64.b64encode(app_password.encode()).decode()
+    data = {}
+    if os.path.exists(USER_CREDENTIALS_FILE):
+        with open(USER_CREDENTIALS_FILE, 'r') as f:
+            data = json.load(f)
+    data[email] = encoded
+    with open(USER_CREDENTIALS_FILE, 'w') as f:
+        json.dump(data, f)
+
+def get_decoded_password(email):
+    with open(USER_CREDENTIALS_FILE, 'r') as f:
+        data = json.load(f)
+    encoded = data.get(email)
+    if not encoded:
+        raise Exception("App password not found for user.")
+    return base64.b64decode(encoded.encode()).decode()
+
 registered_users = set()
 load_dotenv()
 
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, ".."))
-MODEL_PATH = os.path.join(PROJECT_ROOT, "machine_learning", "models", "logistic_regression.pkl")
+MODEL_PATH = os.path.join(PROJECT_ROOT, "machine_learning", "models", "svm.pkl")
 VECTORIZER_PATH = os.path.join(PROJECT_ROOT, "machine_learning", "models", "tfidf_vectorizer.pkl")
 
 # Load trained model and vectorizer
@@ -39,7 +62,7 @@ def sanitize_html(html):
     html = re.sub(r'[\u200b-\u200f\u202a-\u202e\u2060-\u206f\ufeff]+', '', html)
     clean = bleach.clean(
         html,
-        tags=bleach.sanitizer.ALLOWED_TAGS + ['p', 'br', 'div', 'span', 'a', 'strong', 'em', 'ul', 'li'],
+        tags = list(bleach.sanitizer.ALLOWED_TAGS) + ['p', 'br', 'div', 'span', 'a', 'strong', 'em', 'ul', 'li'],
         attributes={
             'a': ['href', 'title'],
             'img': ['src', 'alt', 'style'],
@@ -52,11 +75,19 @@ def sanitize_html(html):
     clean = re.sub(r'(\n\s*){3,}', '\n\n', clean)
     return clean
 
-
 @app.route('/update-emails')
 def update_emails():
+    user_email = request.args.get("email")
+    if not user_email:
+        return jsonify({"error": "Missing user email"}), 400
+
+    try:
+        app_password = get_decoded_password(user_email)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 401
+
     mail = imaplib.IMAP4_SSL("imap.gmail.com")
-    mail.login(os.getenv('EMAIL'), os.getenv('APP_PASSWORD'))
+    mail.login(user_email, app_password)
     mail.select("inbox")
 
     status, messages = mail.search(None, "ALL")
@@ -119,17 +150,17 @@ def update_emails():
 def register():
     data = request.get_json()
     email = data.get('email')
+    app_password = data.get('appPassword')
 
-    if not email:
-        return jsonify({'error': 'Email is required'}), 400
-
-    if email != EMAIL:
-        return jsonify({'error': 'Email does not match the allowed admin email'}), 403
+    if not email or not app_password:
+        return jsonify({'error': 'Email and App Password are required'}), 400
 
     if email in registered_users:
         return jsonify({'error': 'Email already registered'}), 409
 
+    save_encoded_password(email, app_password)
     registered_users.add(email)
+
     return jsonify({'message': 'Registration successful'}), 200
 
 if __name__ == "__main__":
