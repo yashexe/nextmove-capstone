@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './NavBar';
 import EmailCard from './EmailCard';
+import { loadEmails } from '../utils/email';
 
 function FolderScreen({ folder, onBack, onLogout }) {
   const [emails, setEmails] = useState([]);
 
   useEffect(() => {
-    async function fetchEmails() {
-      try {
-        const response = await fetch('http://127.0.0.1:5000/update-emails');
-        const categorizedEmails = await response.json();
-        setEmails(categorizedEmails[folder] || []);
-        console.log("Fetched Emails:", categorizedEmails[folder]);
-      } catch (error) {
-        console.error('Error fetching emails:', error);
-      }
-    }
-    fetchEmails();
-  }, [folder]);
+    const categorizedEmails = loadEmails();  // load from local storage
+    setEmails(categorizedEmails[folder] || []);
+  }, [folder]);  
 
   return (
     <>

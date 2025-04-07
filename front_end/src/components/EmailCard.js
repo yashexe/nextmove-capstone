@@ -5,16 +5,15 @@ function EmailCard({ subject, from, category, body }) {
 
   return (
     <div className="email-card" onClick={() => setExpanded(!expanded)}>
-      {/* Always show this in collapsed view */}
       <p className="card-header"><strong>Subject:</strong> {subject}</p>
       <p className="card-subject"><strong>From:</strong> {from}</p>
       <p className="card-body"><strong>Category:</strong> {category}</p>
 
-      {/* Only show this when expanded */}
       {expanded && (
-        <div className="email-body">
-          <p>{body}</p>
-        </div>
+        <div
+          className="email-body"
+          dangerouslySetInnerHTML={{ __html: body }}
+        />
       )}
     </div>
   );

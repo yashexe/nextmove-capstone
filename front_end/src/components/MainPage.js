@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Navbar from './NavBar';
-
+import { saveData, STORAGE_KEYS } from '../utils/storage'; // make sure this is imported
 const defaultFolders = ['Personal', 'Promotional', 'Urgent', 'Work']; // Replace with your preferred default folders
 
 function MainPage({ onLogout, onFolderSelect }) {
@@ -10,13 +10,18 @@ function MainPage({ onLogout, onFolderSelect }) {
     try {
       const response = await fetch('http://127.0.0.1:5000/update-emails');
       const categorizedEmails = await response.json();
+  
+      // Save to local storage
+      saveData(STORAGE_KEYS.EMAILS, categorizedEmails);
+  
+      // Set folders from keys
       setFolders(Object.keys(categorizedEmails));
       alert("Emails sorted successfully!");
     } catch (error) {
       console.error("Error sorting emails:", error);
     }
   };
-
+  
   return (
     <>
       <Navbar onLogout={onLogout} />
