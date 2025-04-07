@@ -6,7 +6,6 @@ function Navbar({ onLogout }) {
   const [darkMode, setDarkMode] = useState(loadBoolean(STORAGE_KEYS.DARK_MODE));
 
   const toggleNavbar = () => setIsOpen(prev => !prev);
-
   const toggleDarkMode = () => {
     const newMode = !darkMode;
     setDarkMode(newMode);
@@ -15,11 +14,7 @@ function Navbar({ onLogout }) {
   };
 
   useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add('dark-mode');
-    } else {
-      document.body.classList.remove('dark-mode');
-    }
+    document.body.classList.toggle('dark-mode', darkMode);
   }, [darkMode]);
 
   const darkModeText = darkMode ? 'Light Mode' : 'Dark Mode';
@@ -30,9 +25,7 @@ function Navbar({ onLogout }) {
         &#9776;
       </button>
       <div className={`navbar ${isOpen ? 'open' : ''}`}>
-        <button className="navbar-btn" onClick={onLogout}>
-          Logout
-        </button>
+        <button className="navbar-btn" onClick={onLogout}>Logout</button>
         <button className="navbar-btn" onClick={toggleDarkMode}>
           {darkModeText}
         </button>

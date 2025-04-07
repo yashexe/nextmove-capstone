@@ -153,11 +153,6 @@ button.secondary:hover {
   overflow-x: auto;
 }
 
-.dark-mode .email-body {
-  background-color: #2a2a2a;
-  border-left: 3px solid #60a5fa;
-  color: #e0e0e0;
-}
 
 .email-card:hover {
   transform: translateY(-2px);
@@ -308,6 +303,12 @@ button.secondary:hover {
   cursor: pointer;
 }
 
+.dark-mode .navbar {
+  background-color: #1e1e1e;
+  border: 1px solid #444;
+}
+
+
 /* Hamburger toggle icon */
 #navbar-toggle {
   position: fixed;
@@ -409,4 +410,62 @@ button.secondary:hover {
   100% {
     transform: rotate(360deg);
   }
+}
+#navbar-toggle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.navbar {
+  position: absolute;
+  top: 48px; /* now below the hamburger */
+  right: 12px;
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px;
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.navbar.open {
+  display: flex;
+  margin-top: 20px;
+}
+
+.navbar-btn {
+  background-color: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.navbar-btn:last-child {
+  margin-bottom: 0;
+}
+
+.dark-mode .navbar {
+  background-color: #1e1e1e;
+  border-color: #444;
+}
+
+.dark-mode #navbar-toggle {
+  background-color: transparent;
+}
+
+.dark-mode .navbar-btn {
+  background-color: #60a5fa;
+  color: #fff;
 }
