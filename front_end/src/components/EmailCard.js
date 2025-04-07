@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 function EmailCard({ subject, from, category, body, currentFolder, gmail_id }) {
   const [expanded, setExpanded] = useState(false);
   const showCategory = category?.toLowerCase() !== currentFolder?.toLowerCase();
-  console.log("gmail_id:", gmail_id);
 
   return (
     <div className="email-card" onClick={() => setExpanded(!expanded)}>
@@ -20,8 +19,7 @@ function EmailCard({ subject, from, category, body, currentFolder, gmail_id }) {
             dangerouslySetInnerHTML={{ __html: body }}
           />
           {gmail_id && (
-            <a
-              href={`https://mail.google.com/mail/u/0/#inbox/${gmail_id}`}
+            <a href={`https://mail.google.com/mail/u/0/#search/${encodeURIComponent(subject)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="email-link"

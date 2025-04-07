@@ -22,6 +22,7 @@ function MainPage({ onLogout, onFolderSelect }) {
     }
   };
   
+
   return (
     <>
       <Navbar onLogout={onLogout} />
