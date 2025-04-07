@@ -1,6 +1,7 @@
 export const STORAGE_KEYS = {
     FOLDERS: 'folders',
     EMAILS: 'emails',
+    DARK_MODE: 'darkMode',
     USER: 'user'
   };
   
@@ -24,3 +25,11 @@ export const STORAGE_KEYS = {
     saveData(STORAGE_KEYS.FOLDERS, folders);
   }
   
+export function saveBoolean(key, value) {
+  localStorage.setItem(key, value ? 'true' : 'false');
+}
+
+export function loadBoolean(key, defaultValue = false) {
+  const value = localStorage.getItem(key);
+  return value === null ? defaultValue : value === 'true';
+}
