@@ -21,11 +21,13 @@ function FolderScreen({ folder, onBack, onLogout }) {
             emails.map((email, index) => (
               <EmailCard
                 key={index}
-                email={email}
                 subject={email.subject}
                 from={email.from}
                 category={email.category}
-                body={email.body} />
+                body={email.body}
+                currentFolder={folder}
+                gmail_id={email.gmail_id}
+              />
             ))
           ) : (
             <p>No emails available in {folder}.</p>

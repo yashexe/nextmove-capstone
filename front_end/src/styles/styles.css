@@ -147,13 +147,10 @@ button.secondary:hover {
   font-size: 0.95rem;
   color: #1f2937;
   white-space: pre-wrap;
-  /* ✅ keeps line breaks and wraps text */
   overflow-wrap: break-word;
-  /* ✅ wrap long words/URLs */
   word-break: break-word;
   max-width: 100%;
   overflow-x: auto;
-  /* ✅ prevent horizontal overflow */
 }
 
 .dark-mode .email-body {
@@ -335,4 +332,40 @@ button.secondary:hover {
 .dark-mode #navbar-toggle {
   background: #2c2c2c;
   color: #f1f1f1;
+}
+
+.dark-mode .card-header {
+  color: #ffffff;             /* Bright white for Subject */
+  font-weight: 600;
+}
+
+.dark-mode .card-subject {
+  color: #a1a1aa;             /* Light gray for From */
+  font-style: italic;
+}
+
+.dark-mode .card-body {
+  color: #cbd5e1;             /* Medium gray for Category */
+}
+
+.dark-mode .email-body {
+  color: #e5e5e5;             /* Light gray body text */
+  background-color: #2c2c2c;
+  border-left: 3px solid #60a5fa;
+}
+.email-link {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #3b82f6;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.email-link:hover {
+  color: #2563eb;
+}
+
+.dark-mode .email-link {
+  color: #93c5fd;
 }
