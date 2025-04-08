@@ -29,3 +29,11 @@
 #     print(result.get("error"))
 #     print(result.get("error_description"))
 #     return None
+
+
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+EMAIL = os.getenv("EMAIL")

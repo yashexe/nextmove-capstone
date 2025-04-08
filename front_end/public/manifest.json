@@ -14,5 +14,10 @@
   "host_permissions": [
     "http://127.0.0.1/*",
     "https://mail.google.com/*"
-  ]
+  ],
+  "icons": {
+    "16": "icon_final_16.png",
+    "48": "icon_final_48.png",
+    "128": "icon_final_128.png"
+  }
 }

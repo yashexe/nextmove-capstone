@@ -5,14 +5,38 @@ function RegistrationScreen({ onRegistrationSuccess, onBackToLogin }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [appPassword, setAppPassword] = useState('');
 
-  const handleRegister = () => {
-    if (name && email && password) {
-      saveData(STORAGE_KEYS.USER, { name, email, password });
-      initializeDefaultFolders();
-      onRegistrationSuccess(); // Redirect to login after registration
+  const handleRegister = async () => {
+    if (name && email && password && appPassword) {
+      try {
+        const response = await fetch("http://localhost:5000/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, appPassword }),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          alert(result.error);  // shows "Email already registered", or "Email does not match..."
+          return;
+        }
+
+        // If registration is successful
+        saveData(STORAGE_KEYS.USER, { name, email, password });
+        initializeDefaultFolders();
+        alert("Registration successful!");
+        onRegistrationSuccess();
+
+      } catch (error) {
+        console.error("Registration failed:", error);
+        alert("An error occurred. Please try again.");
+      }
     } else {
-      alert('All fields are required!');
+      alert("All fields are required!");
     }
   };
 
@@ -36,6 +60,12 @@ function RegistrationScreen({ onRegistrationSuccess, onBackToLogin }) {
         placeholder="Password"
         value={password}
         onChange={e => setPassword(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Gmail App Password"
+        value={appPassword}
+        onChange={e => setAppPassword(e.target.value)}
       />
       <button onClick={handleRegister}>Sign Up</button>
       <p>

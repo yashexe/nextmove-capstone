@@ -11,5 +11,5 @@ export async function updateEmails() {
 }
 
 export function loadEmails() {
-  return loadData(STORAGE_KEYS.EMAILS, []);
+  return loadData(STORAGE_KEYS.EMAILS, {});
 }
